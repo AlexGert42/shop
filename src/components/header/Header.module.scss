@@ -1,0 +1,23 @@
+@import "../../styles/index";
+
+.header {
+  width: 100%;
+  padding: 20px 0;
+  background-color: $bgPrimary;
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .header__btn {
+      color: $colorTitle;
+    }
+
+    .header__title {
+      color: $colorTitle;
+    }
+
+  }
+
+}
