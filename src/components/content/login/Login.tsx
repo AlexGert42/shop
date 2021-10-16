@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import {Box, Button, FormControl, Grid, TextField} from "@mui/material";
 import styles from "./Login.module.scss";
+import {auth} from '../.././../api/api'
 
-
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {signInWithEmailAndPassword } from "firebase/auth";
 
 
 
@@ -19,19 +19,14 @@ export const Login: React.FC = () => {
 
     const clickHendler = async () => {
 
-
-        const auth = getAuth();
-        console.log(auth.currentUser)
-        signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                // Signed in
-                const user = userCredential.user;
-                console.log(user)
+        auth.signInWithEmailAndPassword(email.trim(), password.trim())
+            .then(res => {
+                console.log(res)
             })
             .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-            });
+            console.log(error.code);
+            console.log(error.message);
+        });
 
     }
 

@@ -17,7 +17,7 @@ export const firestore = firebase.firestore()
 
 export const auth = firebase.auth()
 
-console.log(auth)
+
 
 
 
