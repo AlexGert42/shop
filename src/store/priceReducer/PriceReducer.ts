@@ -1,30 +1,31 @@
-import {createSlice} from "@reduxjs/toolkit";
-
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {priceApi} from "../../api/api";
 
 
 //thunk
 
 
+export const fetchPrice = createAsyncThunk('price/fetchPrice', async (arg, thunkAPI) => {
+    let res: any = await priceApi.getPrice()
+    return {items: res.data}
+})
 
 
+export const addPrice = createAsyncThunk('price/addPrice', async (item: any, thunkAPI) => {
+    let res: any = await priceApi.addPrice(item)
+    return {item: {...item, _id: res.data.name}}
+})
 
-
-
-
-
-
-
-
-
-
-
-
+export const removePrice = createAsyncThunk('price/removePrice', async (id: string, thunkAPI) => {
+    let res = await priceApi.removePrice(id)
+    return {id}
+})
 
 
 //reducer
 
 export type ItemsType = {
-    id: string
+    _id: string
     name: string
     cost: string
     discription: string
@@ -32,34 +33,33 @@ export type ItemsType = {
 
 
 type AppStateType = {
-    items: ItemsType[]
+    items: ItemsType[] | any
 }
-const initialState: AppStateType= {
-
-    items: [
-        {id: '1', name: 'book', cost: '2343', discription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium enim facilis labore nam quam voluptates voluptatibus. Ad, aliquam animi dolores eius et, eum, fuga incidunt obcaecati pariatur quis quod tempore?\n'},
-        {id: '2', name: 'milk', cost: '2343', discription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium enim facilis labore nam quam voluptates voluptatibus. Ad, aliquam animi dolores eius et, eum, fuga incidunt obcaecati pariatur quis quod tempore?\n'},
-        {id: '3', name: 'bred', cost: '2343', discription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium enim facilis labore nam quam voluptates voluptatibus. Ad, aliquam animi dolores eius et, eum, fuga incidunt obcaecati pariatur quis quod tempore?\n'},
-        {id: '4', name: 'apple', cost: '2343', discription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium enim facilis labore nam quam voluptates voluptatibus. Ad, aliquam animi dolores eius et, eum, fuga incidunt obcaecati pariatur quis quod tempore?\n'},
-        {id: '5', name: 'chery', cost: '2343', discription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium enim facilis labore nam quam voluptates voluptatibus. Ad, aliquam animi dolores eius et, eum, fuga incidunt obcaecati pariatur quis quod tempore?\n'},
-        {id: '6', name: 'coco-cola', cost: '2343', discription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium enim facilis labore nam quam voluptates voluptatibus. Ad, aliquam animi dolores eius et, eum, fuga incidunt obcaecati pariatur quis quod tempore?\n'},
-        {id: '7', name: 'pineapple', cost: '2343', discription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium enim facilis labore nam quam voluptates voluptatibus. Ad, aliquam animi dolores eius et, eum, fuga incidunt obcaecati pariatur quis quod tempore?\n'},
-    ]
+const initialState: AppStateType = {
+    items: null
 }
-
-
-
-
 
 
 const slice = createSlice({
     name: 'price',
     initialState: initialState,
-    reducers: {
-
-    },
+    reducers: {},
     extraReducers: (builder) => {
-
+        builder.addCase(fetchPrice.fulfilled, (state, action) => {
+            let payload = Object.keys(action.payload.items).map(key => {
+                return {
+                    ...action.payload.items[key].item,
+                    _id: key
+                }
+            })
+            state.items = payload
+        })
+        builder.addCase(addPrice.fulfilled, (state, action) => {
+            state.items = [...state.items, action.payload.item]
+        })
+        builder.addCase(removePrice.fulfilled, (state, action) => {
+            state.items = state.items.filter((el: any) => el._id !== action.payload.id)
+        })
     }
 })
 

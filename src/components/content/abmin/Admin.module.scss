@@ -1,0 +1,26 @@
+
+.price {
+  display: flex;
+  justify-content: space-between;
+
+
+  .form__item {
+    margin: 10px 0;
+  }
+
+
+
+  .price__list {
+    width: 800px;
+    border: 1px solid ;
+    padding: 20px;
+    max-height: 600px;
+    overflow-y: auto;
+    .price__list_item {
+      margin-bottom: 30px;
+
+    }
+  }
+
+}
+

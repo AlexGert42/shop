@@ -42,6 +42,8 @@ export const Header: React.FC = () => {
                 >
                     <MenuItem className={styles.header__link}><NavLink onClick={handleClose} to={'/price'}>Price</NavLink></MenuItem>
                     <MenuItem className={styles.header__link}><NavLink onClick={handleClose} to={'/bin'}>Bin</NavLink></MenuItem>
+                    <MenuItem className={styles.header__link}><NavLink onClick={handleClose} to={'/admin'}>Admin</NavLink></MenuItem>
+                    <MenuItem className={styles.header__link}><NavLink onClick={handleClose} to={'/login'}>Login</NavLink></MenuItem>
                 </Menu>
             </Grid>
         </Box>

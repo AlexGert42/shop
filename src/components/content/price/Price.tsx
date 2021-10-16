@@ -13,20 +13,23 @@ import {ItemsType} from '../../../store/priceReducer/PriceReducer';
 export const Price: React.FC = () => {
 
     const items = useSelector<RootState, ItemsType[]>(state => state.price.items)
-
+    console.log('items', items)
 
     return (
         <div className={styles.price}>
             {
-                items &&
+                items ?
                 items.map(item => {
+                    console.log(item)
                     return <CardComponent
-                        key={item.id}
+                        key={item._id}
                         name={item.name}
                         cost={item.cost}
                         discription={item.discription}
                     />
                 })
+                    :
+                    <p>not items</p>
             }
         </div>
     )
@@ -48,7 +51,6 @@ export const CardComponent: React.FC<CardComponentType> = ({name, discription, c
                     component="img"
                     height="140"
                     image={img}
-                    alt="green iguana"
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
