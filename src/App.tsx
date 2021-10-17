@@ -5,6 +5,7 @@ import {Footer} from './components/footer/Footer';
 import {Header} from './components/header/Header';
 import {useDispatch} from "react-redux";
 import {fetchPrice} from "./store/priceReducer/PriceReducer";
+import {auth} from "./firebase";
 
 const theme = createTheme({
     palette: {
@@ -23,7 +24,13 @@ export const App = () => {
     const disptch = useDispatch()
 
     useEffect(() => {
+
         disptch(fetchPrice())
+
+        auth.signInAnonymously().then(res => {
+            console.log(res)
+        })
+
     }, [])
 
 

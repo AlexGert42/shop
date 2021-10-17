@@ -1,33 +1,27 @@
 import React, {useState} from "react";
 import {Box, Button, FormControl, Grid, TextField} from "@mui/material";
 import styles from "./Login.module.scss";
-import {auth} from '../.././../api/api'
-
-import {signInWithEmailAndPassword } from "firebase/auth";
-
-
-
+import {useDispatch, useSelector} from "react-redux";
+import {authMe} from "../../../store/appReducer/AppReducer";
+import {RootState} from "../../../store/store";
+import {Redirect} from "react-router-dom";
 
 
 export const Login: React.FC = () => {
+    const auth = useSelector<RootState, boolean>(state => state.app.auth)
+    const dispatch = useDispatch()
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
 
 
-
-
     const clickHendler = async () => {
+        dispatch(authMe({email, password}))
+    }
 
-        auth.signInWithEmailAndPassword(email.trim(), password.trim())
-            .then(res => {
-                console.log(res)
-            })
-            .catch((error) => {
-            console.log(error.code);
-            console.log(error.message);
-        });
-
+    if (auth) {
+        return <Redirect to={'admin'}/>
     }
 
     return (
@@ -35,7 +29,7 @@ export const Login: React.FC = () => {
             <FormControl className={styles.login__form}>
                 <Grid className={styles.login__item}>
                     <TextField
-                        label="Login"
+                        label="Registration"
                         variant="outlined"
                         value={email}
                         onChange={e => setEmail(e.target.value)}

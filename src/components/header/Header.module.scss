@@ -12,6 +12,9 @@
 
     .header__btn {
       color: $colorTitle;
+      a {
+        color: $colorTitle;
+      }
     }
 
     .header__title {

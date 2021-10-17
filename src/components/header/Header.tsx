@@ -1,20 +1,26 @@
-import {Box, Button, Grid, Menu, MenuItem, Typography} from '@mui/material';
+import {Box, Button, ButtonGroup, Grid, Menu, MenuItem, Typography} from '@mui/material';
 import React from 'react';
-import {NavLink} from 'react-router-dom';
+import {NavLink, Redirect} from 'react-router-dom';
 import styles from './Header.module.scss';
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../store/store";
+import {signOut} from "../../store/appReducer/AppReducer";
+import cart from '../../imgs/icons/cart.svg'
+
 
 export const Header: React.FC = () => {
+    const dispatch = useDispatch()
+    const data = useSelector<RootState, string>(state => state.app.userData)
+    const auth = useSelector<RootState, boolean>(state => state.app.auth)
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
+    const handleClose = () => setAnchorEl(null);
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
+    const logout = () => {
+        dispatch(signOut())
+    }
 
     return (
         <Box className={styles.header}>
@@ -22,15 +28,31 @@ export const Header: React.FC = () => {
                 <Typography className={styles.header__title} variant={'h3'}>
                     Shop
                 </Typography>
-                <Button
-                    className={styles.header__btn}
-                    id="basic-button"
-                    aria-controls="basic-menu"
-                    aria-haspopup="true"
-                    onClick={handleClick}
-                >
-                    Menu
-                </Button>
+                <ButtonGroup>
+                    {
+                        auth ?
+                            <Button className={styles.header__btn} onClick={logout}>{data}</Button>
+                            :
+                            <Button className={styles.header__btn}>
+                                <NavLink onClick={handleClose} to={'/login'}>Login</NavLink>
+                            </Button>
+                    }
+                    <Button
+                        className={styles.header__btn}
+                        id="basic-button"
+                        aria-controls="basic-menu"
+                        aria-haspopup="true"
+                        onClick={handleClick}
+                    >
+                        Menu
+                    </Button>
+
+                    <Button className={styles.header__btn}>
+                        <NavLink onClick={handleClose} to={'/bin'}> <img src={cart} alt=" "/></NavLink>
+                    </Button>
+
+
+                </ButtonGroup>
                 <Menu
                     id="basic-menu"
                     anchorEl={anchorEl}
@@ -40,10 +62,17 @@ export const Header: React.FC = () => {
                         'aria-labelledby': 'basic-button',
                     }}
                 >
-                    <MenuItem className={styles.header__link}><NavLink onClick={handleClose} to={'/price'}>Price</NavLink></MenuItem>
-                    <MenuItem className={styles.header__link}><NavLink onClick={handleClose} to={'/bin'}>Bin</NavLink></MenuItem>
-                    <MenuItem className={styles.header__link}><NavLink onClick={handleClose} to={'/admin'}>Admin</NavLink></MenuItem>
-                    <MenuItem className={styles.header__link}><NavLink onClick={handleClose} to={'/login'}>Login</NavLink></MenuItem>
+                    <MenuItem className={styles.header__link}>
+                        <NavLink onClick={handleClose} to={'/price'}>Price</NavLink>
+                    </MenuItem>
+                    <MenuItem className={styles.header__link}>
+                        <NavLink onClick={handleClose} to={'/bin'}>Bin</NavLink>
+                    </MenuItem>
+                    {
+                        auth && <MenuItem className={styles.header__link}>
+                            <NavLink onClick={handleClose} to={'/admin'}>Admin</NavLink>
+                        </MenuItem>
+                    }
                 </Menu>
             </Grid>
         </Box>

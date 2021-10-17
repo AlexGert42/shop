@@ -6,30 +6,36 @@ import {CardActionArea} from '@mui/material';
 import React from 'react';
 import styles from './Price.module.scss';
 import img from '../../../imgs/dont_photo.png'
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/store";
 import {ItemsType} from '../../../store/priceReducer/PriceReducer';
+import { addItemAction } from '../../../store/binReducer/BinReducer';
 
 export const Price: React.FC = () => {
-
     const items = useSelector<RootState, ItemsType[]>(state => state.price.items)
-    console.log('items', items)
+    const dispatch = useDispatch()
+
+    const addItem = (item: ItemsType) => {
+        dispatch(addItemAction({item}))
+    }
+
 
     return (
         <div className={styles.price}>
             {
                 items ?
-                items.map(item => {
-                    console.log(item)
-                    return <CardComponent
-                        key={item._id}
-                        name={item.name}
-                        cost={item.cost}
-                        discription={item.discription}
-                    />
-                })
+                    items.map(item => {
+                        return <CardComponent
+                            key={item._id}
+                            id={item._id}
+                            name={item.name}
+                            cost={item.cost}
+                            discription={item.discription}
+                            eventHendler={addItem}
+                        />
+                    })
                     :
-                    <p>not items</p>
+                    <p>Not Items</p>
             }
         </div>
     )
@@ -37,15 +43,20 @@ export const Price: React.FC = () => {
 
 
 type CardComponentType = {
+    id: string
     name: string,
     discription: string
     cost: string
-    pic?: string
+    eventHendler: (item: ItemsType) => void
 }
 
-export const CardComponent: React.FC<CardComponentType> = ({name, discription, cost}) => {
+export const CardComponent = ({id, name, discription, cost, eventHendler}: CardComponentType) => {
+
+    const clickHendler = () => eventHendler({_id: id, name, discription, cost})
+
+
     return (
-        <Card className={styles.card} sx={{maxWidth: 345}}>
+        <Card className={styles.card} sx={{maxWidth: 345}} onClick={clickHendler}>
             <CardActionArea>
                 <CardMedia
                     component="img"

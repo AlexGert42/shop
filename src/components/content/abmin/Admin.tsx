@@ -4,9 +4,11 @@ import styles from './Admin.module.scss'
 import {useDispatch, useSelector} from "react-redux";
 import {addPrice, ItemsType, removePrice} from "../../../store/priceReducer/PriceReducer";
 import {RootState} from "../../../store/store";
+import {Redirect} from "react-router-dom";
 
 
 export const Admin = () => {
+    const auth = useSelector<RootState, boolean>(state => state.app.auth)
     const items = useSelector<RootState, ItemsType[]>(state => state.price.items)
     const dispatch = useDispatch()
 
@@ -33,8 +35,11 @@ export const Admin = () => {
 
 
     const removeHendler = () => {
-
         dispatch(removePrice(id.trim()))
+    }
+
+    if (!auth) {
+        return <Redirect to={'login'}/>
     }
 
     return (
