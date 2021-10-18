@@ -9,16 +9,16 @@ import img from '../../../imgs/dont_photo.png'
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/store";
 import {ItemsType} from '../../../store/priceReducer/PriceReducer';
-import { addItemAction } from '../../../store/binReducer/BinReducer';
+import {addBinItem} from "../../../store/binReducer/BinReducer";
+
 
 export const Price: React.FC = () => {
     const items = useSelector<RootState, ItemsType[]>(state => state.price.items)
     const dispatch = useDispatch()
 
     const addItem = (item: ItemsType) => {
-        dispatch(addItemAction({item}))
+        dispatch(addBinItem(item))
     }
-
 
     return (
         <div className={styles.price}>
@@ -54,9 +54,8 @@ export const CardComponent = ({id, name, discription, cost, eventHendler}: CardC
 
     const clickHendler = () => eventHendler({_id: id, name, discription, cost})
 
-
     return (
-        <Card className={styles.card} sx={{maxWidth: 345}} onClick={clickHendler}>
+        <Card className={styles.card} onClick={clickHendler}>
             <CardActionArea>
                 <CardMedia
                     component="img"
@@ -68,7 +67,7 @@ export const CardComponent = ({id, name, discription, cost, eventHendler}: CardC
                         {name}
                     </Typography>
                     <Typography gutterBottom variant="h4" component="div">
-                        Cost: {cost}$
+                        Cost: {cost} $
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                         {discription}

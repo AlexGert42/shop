@@ -3,9 +3,11 @@ import React, {useEffect} from 'react';
 import {Content} from './components/content/Content';
 import {Footer} from './components/footer/Footer';
 import {Header} from './components/header/Header';
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {fetchPrice} from "./store/priceReducer/PriceReducer";
-import {auth} from "./firebase";
+import {fetchUser} from "./store/binReducer/BinReducer";
+import {RootState} from "./store/store";
+import {ModalWindow} from "./components/modal/Modal";
 
 const theme = createTheme({
     palette: {
@@ -20,28 +22,28 @@ const theme = createTheme({
 
 
 export const App = () => {
-
     const disptch = useDispatch()
-
+    const auth = useSelector<RootState, boolean>(state => state.app.auth)
     useEffect(() => {
-
+        if (!auth) {
+            disptch(fetchUser())
+        }
         disptch(fetchPrice())
-
-        auth.signInAnonymously().then(res => {
-            console.log(res)
-        })
-
     }, [])
 
 
     return (
-        <ThemeProvider theme={theme}>
-            <Header/>
-            <main className={'container'}>
-                <Content/>
-            </main>
-            <Footer/>
-        </ThemeProvider>
+        <>
+            <ModalWindow/>
+            <ThemeProvider theme={theme}>
+                <Header/>
+                <main className={'container'}>
+                    <Content/>
+                </main>
+                <Footer/>
+            </ThemeProvider>
+        </>
+
     )
 }
 

@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {auth} from "../../firebase";
+import {fetchUser} from "../binReducer/BinReducer";
 
 
 //thunk
@@ -12,18 +13,14 @@ export type UserDataType = {
 export const authMe = createAsyncThunk('app/authMe', async (data: UserDataType, thunkAPI) => {
 
     let res: any = await auth.signInWithEmailAndPassword(data.email.trim(), data.password.trim())
-    console.log(res)
     return {auth: true, userData: res.user.multiFactor.user.email}
-    // .catch((error) => {
-    //     console.log(error.code);
-    //     console.log(error.message);
-    // });
+
 })
 
 
 export const signOut = createAsyncThunk('app/signOut', async (arg, thunkAPI) => {
-    let res = await  auth.signOut()
-    console.log(res)
+    await auth.signOut()
+    thunkAPI.dispatch(fetchUser())
     return {auth: false, userData: ''}
 })
 

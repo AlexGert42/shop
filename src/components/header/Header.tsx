@@ -1,6 +1,6 @@
 import {Box, Button, ButtonGroup, Grid, Menu, MenuItem, Typography} from '@mui/material';
 import React from 'react';
-import {NavLink, Redirect} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import styles from './Header.module.scss';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
@@ -12,6 +12,7 @@ export const Header: React.FC = () => {
     const dispatch = useDispatch()
     const data = useSelector<RootState, string>(state => state.app.userData)
     const auth = useSelector<RootState, boolean>(state => state.app.auth)
+    const count = useSelector<RootState, number | null>(state => state.bin.cartCount)
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -46,12 +47,16 @@ export const Header: React.FC = () => {
                     >
                         Menu
                     </Button>
-
-                    <Button className={styles.header__btn}>
-                        <NavLink onClick={handleClose} to={'/bin'}> <img src={cart} alt=" "/></NavLink>
-                    </Button>
-
-
+                    {
+                        !auth && <Button className={styles.header__btn}>
+                            <NavLink onClick={handleClose} to={'/bin'}>
+                                {
+                                    count && <span className={styles.header__count}>{count}</span>
+                                }
+                                <img src={cart} alt=" "/>
+                            </NavLink>
+                        </Button>
+                    }
                 </ButtonGroup>
                 <Menu
                     id="basic-menu"
@@ -65,13 +70,16 @@ export const Header: React.FC = () => {
                     <MenuItem className={styles.header__link}>
                         <NavLink onClick={handleClose} to={'/price'}>Price</NavLink>
                     </MenuItem>
-                    <MenuItem className={styles.header__link}>
-                        <NavLink onClick={handleClose} to={'/bin'}>Bin</NavLink>
-                    </MenuItem>
+
                     {
-                        auth && <MenuItem className={styles.header__link}>
-                            <NavLink onClick={handleClose} to={'/admin'}>Admin</NavLink>
-                        </MenuItem>
+                        auth ?
+                            <MenuItem className={styles.header__link}>
+                                <NavLink onClick={handleClose} to={'/admin'}>Admin</NavLink>
+                            </MenuItem>
+                            :
+                            <MenuItem className={styles.header__link}>
+                                <NavLink onClick={handleClose} to={'/bin'}>Bin</NavLink>
+                            </MenuItem>
                     }
                 </Menu>
             </Grid>

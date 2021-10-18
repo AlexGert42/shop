@@ -29,10 +29,11 @@ export const Login: React.FC = () => {
             <FormControl className={styles.login__form}>
                 <Grid className={styles.login__item}>
                     <TextField
-                        label="Registration"
+                        label="Email"
                         variant="outlined"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
+
                     />
                 </Grid>
                 <Grid className={styles.login__item}>

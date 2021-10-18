@@ -1,6 +1,23 @@
 
-
-
 .bin {
   display: flex;
+
+  @media (max-width: 768px) {
+    flex-direction: column-reverse;
+  }
+
+  .bin__items {
+    width: 500px;
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+  }
+
+  .bin__item {
+    margin: 20px;
+  }
+
+  .bin__cost {
+    margin: 0 20px;
+  }
 }
