@@ -46,16 +46,20 @@ const slice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(fetchPrice.fulfilled, (state, action) => {
-            let payload = Object.keys(action.payload.items).map(key => {
-                return {
-                    ...action.payload.items[key].item,
-                    _id: key
-                }
-            })
-            state.items = payload
+            if (action.payload.items) {
+                let payload = Object.keys(action.payload.items).map(key => {
+                    return {
+                        ...action.payload.items[key].item,
+                        _id: key
+                    }
+                })
+                state.items = payload
+            }
         })
         builder.addCase(addPrice.fulfilled, (state, action) => {
-            state.items = [...state.items, action.payload.item]
+            if (action.payload.item) {
+                state.items = [...state.items, action.payload.item]
+            }
         })
         builder.addCase(removePrice.fulfilled, (state, action) => {
             state.items = state.items.filter((el: any) => el._id !== action.payload.id)

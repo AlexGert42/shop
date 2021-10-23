@@ -80,7 +80,7 @@ export const Admin = () => {
 
             <Grid spacing={10} className={styles.price__list}>
                 <TextField
-                    label="Search"
+                    label="Search ID"
                     variant="outlined"
                     value={id}
                     onChange={e => setId(e.target.value)}

@@ -7,7 +7,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {fetchPrice} from "./store/priceReducer/PriceReducer";
 import {fetchUser} from "./store/binReducer/BinReducer";
 import {RootState} from "./store/store";
-import {ModalWindow} from "./components/modal/Modal";
+import {ModalItemType, ModalWindow} from "./components/modal/Modal";
+import {showModal} from "./store/appReducer/AppReducer";
 
 const theme = createTheme({
     palette: {
@@ -24,6 +25,9 @@ const theme = createTheme({
 export const App = () => {
     const disptch = useDispatch()
     const auth = useSelector<RootState, boolean>(state => state.app.auth)
+    const modalOpen = useSelector<RootState, boolean>(state => state.app.modal)
+    const modalContent = useSelector<RootState, ModalItemType>(state => state.app.modalCntent)
+
     useEffect(() => {
         if (!auth) {
             disptch(fetchUser())
@@ -31,10 +35,13 @@ export const App = () => {
         disptch(fetchPrice())
     }, [])
 
+    const closeModal = () => {
+        disptch(showModal({value: false, item: {name: '', discription: ''}}))
+    }
 
     return (
         <>
-            <ModalWindow/>
+            <ModalWindow value={modalOpen} item={modalContent} closeModal={closeModal}/>
             <ThemeProvider theme={theme}>
                 <Header/>
                 <main className={'container'}>

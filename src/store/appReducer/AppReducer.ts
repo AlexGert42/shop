@@ -1,6 +1,8 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
+import { ModalItemType } from "../../components/modal/Modal";
 import {auth} from "../../firebase";
 import {fetchUser} from "../binReducer/BinReducer";
+import {ItemsType} from "../priceReducer/PriceReducer";
 
 
 //thunk
@@ -31,18 +33,32 @@ type appStateType = {
     initApp: boolean
     auth: boolean
     userData: string
+    modal: boolean
+    modalCntent: ModalItemType
 }
 const initialState: appStateType = {
     initApp: false,
     auth: false,
-    userData: ''
+    userData: '',
+    modal: false,
+    modalCntent: {
+        name: '',
+        discription: ''
+    }
 }
 
 
 const slice = createSlice({
     name: 'app',
     initialState: initialState,
-    reducers: {},
+    reducers: {
+        showModal(state, action: PayloadAction<{value: boolean, item: ModalItemType}>) {
+            state.modal = action.payload.value
+            state.modalCntent = action.payload.item
+
+
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(authMe.fulfilled, (state, action) => {
             state.auth = action.payload.auth
@@ -56,3 +72,5 @@ const slice = createSlice({
 })
 
 export const AppReducer = slice.reducer
+
+export const {showModal} = slice.actions

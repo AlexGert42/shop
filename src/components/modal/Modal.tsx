@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import {ItemsType} from "../../store/priceReducer/PriceReducer";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -15,28 +16,37 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
+export type ModalItemType = {
+    name: string
+    discription: string
+}
 
-export const ModalWindow = () => {
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+type ModalPropsType = {
+    value: boolean
+    item: ModalItemType
+    closeModal: () => void
+}
+export const ModalWindow: React.FC<ModalPropsType> = ({value, item, closeModal}) => {
+
 
     return (
         <div>
-            <Button onClick={handleOpen}>Open modal</Button>
             <Modal
                 keepMounted
-                open={open}
-                onClose={handleClose}
+                open={value}
+                onClose={closeModal}
                 aria-labelledby="keep-mounted-modal-title"
                 aria-describedby="keep-mounted-modal-description"
             >
                 <Box sx={style}>
-                    <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
-                        Text in a modal
+                    <Typography variant={'h4'} sx={{ mt: 2 }}>
+                        Your Buy
                     </Typography>
-                    <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
-                        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                    <Typography variant="h6" component="h2" sx={{ mt: 2 }}>
+                        {item.name}
+                    </Typography>
+                    <Typography sx={{ mt: 2 }}>
+                        {item.discription}
                     </Typography>
                 </Box>
             </Modal>

@@ -10,6 +10,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/store";
 import {ItemsType} from '../../../store/priceReducer/PriceReducer';
 import {addBinItem} from "../../../store/binReducer/BinReducer";
+import { showModal } from '../../../store/appReducer/AppReducer';
+
+
 
 
 export const Price: React.FC = () => {
@@ -17,6 +20,7 @@ export const Price: React.FC = () => {
     const dispatch = useDispatch()
 
     const addItem = (item: ItemsType) => {
+        dispatch(showModal({value: true, item: {name: item.name, discription: item.discription}}))
         dispatch(addBinItem(item))
     }
 
